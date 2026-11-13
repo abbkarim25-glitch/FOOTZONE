@@ -1,0 +1,9 @@
+<?php
+require 'includes/functions.php';$title='Accueil';$base='';
+$products=$pdo->query("SELECT p.*,c.name category_name,(SELECT image_path FROM product_images WHERE product_id=p.id ORDER BY is_main DESC,id LIMIT 1) image_path FROM products p JOIN categories c ON c.id=p.category_id WHERE p.status='active' ORDER BY p.featured DESC,p.id DESC LIMIT 8")->fetchAll();
+$cats=$pdo->query("SELECT * FROM categories ORDER BY name LIMIT 6")->fetchAll();require 'includes/header.php';?>
+<section class="hero"><div class="container"><p class="eyebrow">LA PASSION DU FOOTBALL COMMENCE ICI</p><h1>ÉQUIPE-TOI.<br><span>DOMINE LE TERRAIN.</span></h1><p>Chaussures, maillots, ballons et accessoires : tout pour ton prochain match.</p><a class="btn" href="shop.php">DÉCOUVRIR LA BOUTIQUE →</a></div></section>
+<section class="container section"><div class="heading"><div><small>EXPLORE NOTRE UNIVERS</small><h2>Nos catégories</h2></div><a href="categories.php">Toutes les catégories →</a></div><div class="cats"><?php foreach($cats as $c):?><a class="cat" href="shop.php?category=<?=(int)$c['id']?>"><b>⚽</b><h3><?=e($c['name'])?></h3><small>Explorer →</small></a><?php endforeach?></div></section>
+<section class="dark"><div class="container section"><div class="heading"><div><small>SÉLECTION FOOTZONE</small><h2>Produits populaires</h2></div><a href="shop.php">Voir tout →</a></div><div class="products"><?php foreach($products as $p):?><article class="card"><a href="product.php?id=<?=(int)$p['id']?>"><img src="<?=e(img($p))?>" alt="<?=e($p['name'])?>"></a><div><small><?=e($p['category_name'])?></small><h3><a href="product.php?id=<?=(int)$p['id']?>"><?=e($p['name'])?></a></h3><b><?=money($p['price'])?></b></div></article><?php endforeach?></div></div></section>
+<section class="cta"><div class="container"><h2>Ton jeu. Ton équipement. Ton terrain.</h2><a class="btn darkbtn" href="shop.php">ACHETER MAINTENANT →</a></div></section>
+<?php require 'includes/footer.php';?>
